@@ -43,3 +43,7 @@ next-env.d.ts
 # local demo data
 .data/
 !.env.example
+
+# scaffold agent files
+AGENTS.md
+CLAUDE.md
