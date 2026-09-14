@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storefront in a Box: architecture</title>
+<style>
+  body { margin:0; background:#fbf5ec; font-family:"Avenir Next","Segoe UI",system-ui,sans-serif; color:#2b1d14; }
+  .wrap { width:1600px; height:1000px; position:relative; padding:40px 56px; box-sizing:border-box; }
+  h1 { font-family:Georgia,serif; font-size:40px; margin:0; }
+  .sub { color:#8a7565; margin-top:6px; font-size:17px; }
+  .box { position:absolute; border-radius:22px; background:#fff; border:2px solid #eadfce; padding:18px 20px; box-sizing:border-box; box-shadow:0 10px 30px -18px rgba(43,29,20,.35); }
+  .box h2 { margin:0 0 8px; font-family:Georgia,serif; font-size:23px; }
+  .box p, .box li { margin:0; font-size:14.5px; line-height:1.45; color:#5a4636; }
+  .box ul { margin:6px 0 0; padding-left:18px; }
+  .tag { display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:99px; margin-bottom:8px; }
+  .aws { background:#fff1dd; color:#b45309; } .mcp { background:#e8eefc; color:#1d4ed8; } .amz { background:#e0f2f1; color:#0f766e; } .ours { background:#fde8e2; color:#b33a22; } .ext { background:#efe5d6; color:#6e5846; }
+  .dark { background:#2b1d14; border-color:#2b1d14; } .dark h2 { color:#fbf5ec; } .dark p, .dark li { color:#e6d6c4; }
+  svg { position:absolute; inset:0; pointer-events:none; }
+  .lbl { font-size:13px; fill:#6e5846; font-weight:600; }
+  .legend { position:absolute; left:56px; bottom:30px; font-size:13px; color:#8a7565; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Storefront in a Box: architecture</h1>
+  <div class="sub">A small shop's catalog becomes an Alexa+ add-on: a self-hosted MCP server (spec 2025-11-25, Streamable HTTP) with MCP Apps cards, OAuth 2.1 + PKCE account linking and deterministic order rules.</div>
+
+  <svg width="1600" height="1000">
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c8553d"/></marker></defs>
+    <path d="M380 330 H520" stroke="#c8553d" stroke-width="3" fill="none" marker-end="url(#a)"/>
+    <text x="392" y="318" class="lbl">utterance / ui/message</text>
+    <path d="M860 330 H990" stroke="#c8553d" stroke-width="3" fill="none" marker-end="url(#a)"/>
+    <text x="870" y="318" class="lbl">MCP · Streamable HTTP</text>
+    <path d="M230 470 V600 H990" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="7 6" fill="none" marker-end="url(#a)"/>
+    <text x="250" y="588" class="lbl">AppBridge proxies tools/call + resources/read (Bearer token)</text>
+    <path d="M1190 470 V520" stroke="#c8553d" stroke-width="3" fill="none" marker-end="url(#a)"/>
+    <path d="M1300 710 V760 H1300" stroke="#c8553d" stroke-width="3" fill="none" marker-end="url(#a)"/>
+    <path d="M1080 760 V800 H620" stroke="#c8553d" stroke-width="3" fill="none" marker-end="url(#a)"/>
+    <text x="700" y="790" class="lbl">orders appear live</text>
+    <path d="M1450 470 V210 H1400" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="7 6" fill="none" marker-end="url(#a)"/>
+    <path d="M690 180 V110 H1110" stroke="#6e5846" stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+  </svg>
+
+  <div class="box" style="left:56px; top:190px; width:324px; height:280px;">
+    <span class="tag ours">Simulated Alexa+ display</span>
+    <h2>Smart display (Next.js)</h2>
+    <ul>
+      <li>Push-to-talk (Web Speech API), spoken replies, captions</li>
+      <li><b>MCP Apps host</b>: renders <code>ui://</code> cards in a sandboxed iframe via <code>AppBridge</code></li>
+      <li>Card buttons send <code>ui/message</code> (e.g. "Confirm order MB-4821")</li>
+      <li>Activity panel: tool calls, guardrails, latency</li>
+    </ul>
+  </div>
+
+  <div class="box dark" style="left:520px; top:180px; width:340px; height:300px;">
+    <span class="tag aws">AWS · Strands Agents SDK</span>
+    <h2>/api/assistant</h2>
+    <ul>
+      <li><code>Agent</code> + <code>McpClient</code> (Streamable HTTP) → merchant add-on tools</li>
+      <li><code>OpenAIModel</code> → Qwen3.8-27B (OpenAI-compatible, W&amp;B Inference)</li>
+      <li><code>BeforeToolCallEvent</code> hooks: purchase confirmation, nut-allergy check, lead time, slot capacity</li>
+      <li><code>BeforeModelCallEvent</code> step cap · NDJSON event stream</li>
+    </ul>
+  </div>
+
+  <div class="box" style="left:990px; top:180px; width:410px; height:290px;">
+    <span class="tag mcp">MCP server · spec 2025-11-25</span>
+    <h2>/api/mcp/[merchant]</h2>
+    <ul>
+      <li>Stateless <code>WebStandardStreamableHTTPServerTransport</code> (JSON responses)</li>
+      <li>Tools: browse_menu, design_cake, check_pickup_slots, get_my_profile, remember_note, prepare_checkout, place_order, order_status</li>
+      <li><b>MCP Apps</b> resources: menu carousel, cake studio, checkout, live order card</li>
+      <li>HTTP 401 + RFC 9728 metadata for customer tools · Origin check (403)</li>
+    </ul>
+  </div>
+
+  <div class="box" style="left:990px; top:520px; width:410px; height:190px;">
+    <span class="tag ours">Deterministic rules</span>
+    <h2>lib/rules.ts</h2>
+    <p>Pricing &amp; tax · pickup windows in shop time zone · 48h custom-cake lead time · decorator capacity per window · tree-nut confirmation. Enforced in the server; pre-checked in Strands hooks.</p>
+  </div>
+
+  <div class="box" style="left:1140px; top:760px; width:400px; height:170px;">
+    <span class="tag ext">Storage</span>
+    <h2>Vercel Blob / local files</h2>
+    <p>Orders, customer profiles (notes + usual order = memory across sessions), onboarded merchants.</p>
+  </div>
+
+  <div class="box" style="left:300px; top:690px; width:320px; height:200px;">
+    <span class="tag ours">Merchant</span>
+    <h2>Kitchen screen &amp; onboarding</h2>
+    <p>Live order board with piping messages, status updates that flow back to the customer's order card. Paste a CSV → new add-on endpoint + manifest.</p>
+  </div>
+
+  <div class="box" style="left:1440px; top:100px; width:0; height:0; border:0; box-shadow:none;"></div>
+  <div class="box" style="left:1110px; top:60px; width:290px; height:100px;">
+    <span class="tag amz">OAuth 2.1 + PKCE S256</span>
+    <p><code>/.well-known/oauth-authorization-server</code>, <code>/oauth/authorize</code>, <code>/api/oauth/token</code> (HMAC-signed tokens)</p>
+  </div>
+
+  <div class="box" style="left:1430px; top:480px; width:140px; height:0; border:0; box-shadow:none;"></div>
+  <div class="legend">Real Alexa+ path: Alexa+ is the MCP client and renders the same MCP Apps; this repo simulates that client because Alexa+ for Builders is limited to select partners.</div>
+</div>
+</body>
+</html>
