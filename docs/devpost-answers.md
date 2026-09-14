@@ -1,6 +1,6 @@
 # Devpost submission drafts: Storefront in a Box
 
-Replace `LIVE_URL` / `VIDEO_URL` / `REPO_URL` before submitting.
+Replace `VIDEO_URL` before submitting.
 
 ## Name (≤60)
 
@@ -44,7 +44,7 @@ Builder access to Alexa+ is partner-only, so we built a **simulated Alexa+ smart
 
 All shops, customers and payments are fictional or simulated.
 
-Live: LIVE_URL · Video: VIDEO_URL · Code: REPO_URL
+Live: https://storefront-in-a-box-sepia.vercel.app · Video: VIDEO_URL · Code: https://github.com/chinesepowered/storefront-in-a-box
 
 ## Built with
 
@@ -54,14 +54,14 @@ nextjs, typescript, react, model-context-protocol, mcp-apps, alexa-plus, strands
 
 No real account needed.
 
-1. Open LIVE_URL/device and click **Link account** → **Allow** (demo OAuth server; any name).
+1. Open https://storefront-in-a-box-sepia.vercel.app/device and click **Link account** → **Allow** (demo OAuth server; any name).
 2. Type "Hi! My son Leo turns 7 on Saturday. What cakes do you have?" (Chrome also supports the mic button).
 3. Tap **Customize** on a cake, choose size, frosting and message, then **Add to order**.
 4. Type "Noon works. Also add two almond croissants." The assistant asks about nut allergies.
 5. Type "Leo is allergic to tree nuts. Skip the croissants, add morning buns instead." The checkout card appears; tap **Pay**.
-6. Open **Kitchen screen ↗** (LIVE_URL/merchant/marigold) and press **Start baking**; the order card on the display updates within a few seconds.
+6. Open **Kitchen screen ↗** (https://storefront-in-a-box-sepia.vercel.app/merchant/marigold) and press **Start baking**; the order card on the display updates within a few seconds.
 7. Click **New session** and type "Can I get my usual for Sunday morning?"
-8. Optional: `npx @modelcontextprotocol/inspector --cli LIVE_URL/api/mcp/marigold --transport http --method tools/list`. Onboard your own shop at LIVE_URL/onboard.
+8. Optional: `npx @modelcontextprotocol/inspector --cli https://storefront-in-a-box-sepia.vercel.app/api/mcp/marigold --transport http --method tools/list`. Onboard your own shop at https://storefront-in-a-box-sepia.vercel.app/onboard.
 
 Agent requests are rate-limited per IP. If an answer is slow, the free-tier model endpoint is busy; retry.
 

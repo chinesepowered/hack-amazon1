@@ -2,7 +2,7 @@
 
 **The bakery on the corner deserves voice ordering too.** Storefront in a Box turns a small shop's catalog into an **Alexa+ add-on**: a self-hosted MCP server (spec 2025-11-25, Streamable HTTP) with interactive MCP Apps cards (menu carousel, custom-cake studio, checkout, live order status), OAuth 2.1 + PKCE account linking, customer memory, and deterministic order rules. A **Strands Agents SDK** assistant plays the role of Alexa+ on a simulated smart display, and orders land on the shop's kitchen screen.
 
-- **Live demo:** LIVE_URL (display: `/device` · kitchen screen: `/merchant/marigold` · onboarding: `/onboard` · pitch: `/slides.html`)
+- **Live demo:** https://storefront-in-a-box-sepia.vercel.app (display: `/device` · kitchen screen: `/merchant/marigold` · onboarding: `/onboard` · pitch: `/slides.html`)
 - **Demo video:** VIDEO_URL
 - **Track:** Alexa+ · **Mini challenge:** AWS Builder (Strands Agents SDK)
 
@@ -68,7 +68,7 @@ Not deployed to AgentCore; everything runs as a Next.js app on Vercel. Persisten
 
 ## Try it
 
-1. Open **LIVE_URL/device** and click **Link account** → **Allow** (demo authorization server; any name works).
+1. Open **https://storefront-in-a-box-sepia.vercel.app/device** and click **Link account** → **Allow** (demo authorization server; any name works).
 2. Type or say: "Hi! My son Leo turns 7 on Saturday. What cakes do you have?"
 3. Tap **Customize**, pick a size, frosting and message, then **Add to order**.
 4. Say: "Noon works. Also add two almond croissants." The assistant asks about nut allergies.
@@ -76,10 +76,10 @@ Not deployed to AgentCore; everything runs as a Next.js app on Vercel. Persisten
 6. Tap **Pay**, then open **Kitchen screen ↗** and press **Start baking**; the order card updates within a few seconds.
 7. Click **New session** and ask: "Can I get my usual for Sunday morning?"
 
-Point any MCP client (MCP Inspector, Claude, VS Code, Goose) at `LIVE_URL/api/mcp/marigold`. Browsing works without auth; customer tools trigger OAuth.
+Point any MCP client (MCP Inspector, Claude, VS Code, Goose) at `https://storefront-in-a-box-sepia.vercel.app/api/mcp/marigold`. Browsing works without auth; customer tools trigger OAuth.
 
 ```bash
-npx @modelcontextprotocol/inspector --cli LIVE_URL/api/mcp/marigold --transport http --method tools/list
+npx @modelcontextprotocol/inspector --cli https://storefront-in-a-box-sepia.vercel.app/api/mcp/marigold --transport http --method tools/list
 ```
 
 ## Run locally
