@@ -116,4 +116,4 @@ Next.js 16 · TypeScript · Strands Agents SDK (TypeScript) · Model Context Pro
 
 ## License
 
-TBD before submission.
+[AGPL-3.0](LICENSE). Commercial licences are available from the author. The Storefront in a Box name and logo are not covered by the licence — see [TRADEMARKS.md](TRADEMARKS.md).
