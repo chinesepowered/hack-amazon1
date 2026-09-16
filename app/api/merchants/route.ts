@@ -1,5 +1,5 @@
 // Onboarding: turn a catalog CSV into a live Alexa+ add-on (MCP endpoint + manifest + Agent Skill).
-import { originOf } from "@/lib/auth";
+import { publicOriginOf } from "@/lib/auth";
 import { DEMO_MERCHANT, parseCatalogCsv, slugify, type Merchant } from "@/lib/catalog";
 import { clientIp, rateLimit } from "@/lib/ratelimit";
 import { getMerchant, saveMerchant } from "@/lib/store";
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   };
   await saveMerchant(merchant);
 
-  const origin = originOf(req);
+  const origin = publicOriginOf(req);
   const mcpUrl = `${origin}/api/mcp/${slug}`;
   // Mirrors the fields an Alexa+ MCP add-on manifest needs (see `alexa-ai new mcp`): endpoint, auth, descriptions.
   const manifest = {

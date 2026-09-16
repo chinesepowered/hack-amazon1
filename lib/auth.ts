@@ -71,4 +71,12 @@ export function originOf(req: Request): string {
   return `${proto}://${host}`;
 }
 
+// The origin a generated add-on advertises to Alexa+. A manifest has to carry the canonical public URL,
+// not whichever internal host answered the request, so PUBLIC_BASE_URL wins when it is set.
+// Never use this for the MCP Origin check or OAuth redirects — those must match the serving host.
+export function publicOriginOf(req: Request): string {
+  const configured = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, "");
+  return configured || originOf(req);
+}
+
 export const SCOPES = ["orders:read", "orders:write", "profile"] as const;
