@@ -44,7 +44,7 @@ Builder access to Alexa+ is partner-only, so we built a **simulated Alexa+ smart
 
 All shops, customers and payments are fictional or simulated.
 
-Live: https://storefront-in-a-box-sepia.vercel.app · Video: VIDEO_URL · Code: https://github.com/chinesepowered/storefront-in-a-box
+Live: https://storefront-in-a-box-sepia.vercel.app · Video: VIDEO_URL · Code: https://github.com/chinesepowered/hack-amazon1
 
 ## Built with
 
