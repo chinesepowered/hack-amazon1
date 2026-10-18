@@ -78,7 +78,7 @@ export async function POST(req: Request) {
           api: "chat",
           apiKey: process.env.OPENAI_API_KEY,
           modelId: process.env.OPENAI_MODEL,
-          clientConfig: { baseURL: process.env.OPENAI_BASE_URL, timeout: 60_000, maxRetries: 2 },
+          clientConfig: { baseURL: process.env.OPENAI_BASE_URL, timeout: 60_000, maxRetries: 4 },
           params: { temperature: 0, chat_template_kwargs: { enable_thinking: false } },
         });
         const agent = new Agent({
